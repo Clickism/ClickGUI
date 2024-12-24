@@ -54,6 +54,26 @@ public interface Icon {
     }
 
     /**
+     * Hides potion effects of this icon.
+     *
+     * @return this icon
+     */
+    default Icon hidePotionEffects() {
+        return applyToMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS));
+    }
+
+    /**
+     * Hides all attributes of this icon.
+     *
+     * @return this icon
+     */
+    default Icon hideAllAttributes() {
+        return applyToMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_POTION_EFFECTS,
+                ItemFlag.HIDE_ARMOR_TRIM, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_UNBREAKABLE));
+    }
+
+    /**
      * Adds the enchantment glint to this icon.
      *
      * @return this icon

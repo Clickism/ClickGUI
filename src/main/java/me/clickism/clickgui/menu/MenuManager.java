@@ -11,10 +11,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -60,11 +57,12 @@ public class MenuManager implements Listener {
      * Closes all active menus.
      */
     public void closeActiveMenus() {
-        activeMenus.forEach((inventory, menu) -> {
-            List<HumanEntity> viewers = inventory.getViewers();
+        Iterator<Map.Entry<Inventory, MenuView>> iterator = activeMenus.entrySet().iterator();
+        while (iterator.hasNext()) {
+            List<HumanEntity> viewers = iterator.next().getKey().getViewers();
+            iterator.remove();
             new ArrayList<>(viewers).forEach(HumanEntity::closeInventory);
-        });
-        activeMenus.clear();
+        }
     }
 
     /**

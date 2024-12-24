@@ -81,6 +81,26 @@ public class Button {
     }
 
     /**
+     * Hides the potion effects of this button's icon. See {@link Icon#hidePotionEffects()}.
+     *
+     * @return this button
+     */
+    public Button hidePotionEffects() {
+        icon.hidePotionEffects();
+        return this;
+    }
+
+    /**
+     * Hides all attributes of this button's icon. See {@link Icon#hideAllAttributes()}.
+     *
+     * @return this button
+     */
+    public Button hideAllAttributes() {
+        icon.hideAllAttributes();
+        return this;
+    }
+
+    /**
      * Adds an enchantment glint to this button's icon. See {@link Icon#addEnchantmentGlint()}.
      *
      * @return this button
