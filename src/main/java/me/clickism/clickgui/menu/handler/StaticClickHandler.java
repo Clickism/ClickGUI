@@ -11,9 +11,14 @@ import org.bukkit.inventory.ItemStack;
  * A click handler that does not allow changing the inventory of a menu in any way.
  */
 public class StaticClickHandler implements ClickHandler {
+    /**
+     * Creates a new static click handler.
+     */
+    public StaticClickHandler() {
+    }
+
     @Override
     public boolean handleClick(InventoryClickEvent event) {
-        event.setCancelled(true);
         return false;
     }
 

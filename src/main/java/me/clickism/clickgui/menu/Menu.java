@@ -1,173 +1,192 @@
 package me.clickism.clickgui.menu;
 
+import me.clickism.clickgui.annotations.Colorized;
 import me.clickism.clickgui.menu.handler.ClickHandler;
 import me.clickism.clickgui.menu.handler.StaticClickHandler;
-import me.clickism.clickgui.menu.icon.Icon;
+import me.clickism.clickgui.util.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class Menu {
+/**
+ * Represents a menu.
+ */
+public class Menu {
+    /**
+     * The player viewing the menu.
+     */
+    protected final Player player;
 
-    private final String title;
-    private final int size;
+    /**
+     * The size of the menu.
+     */
+    protected final int size;
+    /**
+     * The buttons in the menu.
+     */
+    protected final Button[] buttons;
+    /**
+     * The title of the menu.
+     */
+    protected String title = "";
+    /**
+     * The background of the menu.
+     */
+    protected MenuBackground background = (slot) -> null;
 
-    @Nullable
-    private final Location location;
-    private final ClickHandler clickHandler;
+    /**
+     * The supplier for the inventory.
+     */
+    protected final InventorySupplier inventorySupplier;
+    /**
+     * The click handler for the menu.
+     */
+    protected ClickHandler clickHandler = new StaticClickHandler();
+    /**
+     * The action to perform when the menu is closed.
+     */
+    protected Consumer<MenuView> onClose = view -> {};
 
-    @Nullable
-    private final MenuBackground background;
-
-    private final Map<Integer, Button> buttonMap = new HashMap<>();
-
-    public Menu(String title, int size, @Nullable Location location) {
-        this(title, size, location, null, new StaticClickHandler());
+    /**
+     * Creates a new menu.
+     *
+     * @param player the player viewing the menu
+     * @param type   the type of menu
+     */
+    public Menu(Player player, MenuType type) {
+        this(player, type.getSupplier(), type.getSize());
     }
 
-    public Menu(String title, int size, @Nullable Location location, @Nullable MenuBackground background,
-                ClickHandler clickHandler) {
-        this.location = location;
+    /**
+     * Creates a new menu.
+     *
+     * @param player        the player viewing the menu
+     * @param inventoryType the type of inventory
+     */
+    public Menu(Player player, InventoryType inventoryType) {
+        this(player, title -> Bukkit.createInventory(null, inventoryType, title), inventoryType.getDefaultSize());
+    }
+
+    /**
+     * Creates a new menu.
+     *
+     * @param player            the player viewing the menu
+     * @param inventorySupplier the supplier for the inventory
+     * @param size              the size of the menu
+     */
+    protected Menu(Player player, InventorySupplier inventorySupplier, int size) {
+        this.player = player;
+        this.inventorySupplier = inventorySupplier;
         this.size = size;
-        this.title = title;
+        this.buttons = new Button[size];
+    }
+
+    /**
+     * Adds a button to the menu.
+     *
+     * @param slot   the slot to add the button to
+     * @param button the button to add
+     * @return this menu
+     */
+    public Menu addButton(int slot, Button button) {
+        if (slot >= size) {
+            throw new IllegalArgumentException("Slot " + slot + " out of bounds for menu with size " + size);
+        }
+        buttons[slot] = button;
+        return this;
+    }
+
+    /**
+     * Sets the title of the menu.
+     *
+     * @param title the title
+     * @return this menu
+     */
+    public Menu setTitle(@Colorized String title) {
+        this.title = Utils.colorize(title);
+        return this;
+    }
+
+    /**
+     * Sets the background of the menu.
+     *
+     * @param background the background
+     * @return this menu
+     */
+    public Menu setBackground(MenuBackground background) {
         this.background = background;
+        return this;
+    }
+
+    /**
+     * Sets the click handler of the menu.
+     *
+     * @param clickHandler the click handler
+     * @return this menu
+     */
+    public Menu setClickHandler(ClickHandler clickHandler) {
         this.clickHandler = clickHandler;
+        return this;
     }
 
     /**
-     * Sets up the buttons for the menu based on the player viewing it.
-     * See {@link #addButton(Button)}.
+     * Sets the action to perform when the menu is closed.
      *
-     * @param viewer the player viewing the menu
+     * @param onClose the action to perform
+     * @return this menu
      */
-    public abstract void setupButtons(Player viewer, MenuManager menuManager);
+    public Menu setOnClose(Consumer<MenuView> onClose) {
+        this.onClose = onClose;
+        return this;
+    }
 
-    /**
-     * Places the buttons of the menu in the given inventory.
-     */
     private void placeButtons(Inventory inventory) {
-        buttonMap.forEach((slot, button) -> inventory.setItem(slot, button.getIcon().getItem()));
-    }
-
-    /**
-     * Decorates the given inventory with the background and buttons for the given player.
-     *
-     * @param viewer the player viewing the menu
-     */
-    public void decorate(Inventory inventory, Player viewer, MenuManager menuManager) {
-        if (background != null) {
-            for (int i = 0; i < size; i++) {
-                addButton(background.getBackgroundButton(i));
-            }
+        for (int i = 0; i < buttons.length; i++) {
+            Button button = getButton(i);
+            if (button == null) continue;
+            buttons[i] = button; // Update in case of a background button
+            inventory.setItem(i, button.icon.get());
         }
-        setupButtons(viewer, menuManager);
-        placeButtons(inventory);
     }
 
     /**
-     * Adds an icon to the menu.
+     * Gets the button at a slot.
      *
-     * @param button the icon to add
-     */
-    protected void addButton(Button button) {
-        buttonMap.put(button.getSlot(), button);
-    }
-
-    /**
-     * Adds a silent button to the menu with the specified slot, icon and click event.
-     *
-     * @param slot    the slot of the button
-     * @param icon    the icon of the button
-     * @param onClick the click event of the button
-     */
-    protected void addButton(int slot, Icon icon, Consumer<InventoryClickEvent> onClick) {
-        addButton(new SilentButton(slot, icon) {
-            @Override
-            protected void onClick(InventoryClickEvent event) {
-                onClick.accept(event);
-            }
-        });
-    }
-
-    /**
-     * Handles the click event when the menu is clicked.
-     *
-     * @param event the click event
-     */
-    protected void onClick(InventoryClickEvent event) {
-        if (!clickHandler.isValidClick(event)) {
-            event.setCancelled(true);
-            return;
-        }
-        Button button = buttonMap.get(event.getRawSlot());
-        if (button == null) return;
-        if (clickHandler.handleClick(event)) {
-            return; // Handled by the click handler
-        }
-        button.onClick(event);
-    }
-
-    /**
-     * Handles the drag event when an item is dragged in the menu.
-     */
-    protected void onDrag(InventoryDragEvent event) {
-        clickHandler.handleDrag(event);
-    }
-
-    /**
-     * Handles the close event when the menu is closed.
-     *
-     * @param event the close event
-     */
-    protected void onClose(InventoryCloseEvent event) {
-    }
-
-    /**
-     * Opens the menu for the specified player.
-     *
-     * @param viewer the player to open the menu for
-     */
-    Inventory open(Player viewer, MenuManager menuManager) {
-        Inventory inventory = Bukkit.createInventory(null, size, title);
-        decorate(inventory, viewer, menuManager);
-        viewer.openInventory(inventory);
-        return inventory;
-    }
-
-    /**
-     * Gets the location of the menu.
-     *
-     * @return the location of the menu
+     * @param slot the slot
+     * @return the button
      */
     @Nullable
-    public Location getLocation() {
-        return location;
+    public Button getButton(int slot) {
+        Button button = buttons[slot];
+        if (button != null) {
+            return button;
+        }
+        return background.getButton(slot);
     }
 
     /**
-     * Gets the size of the menu.
+     * Opens the menu.
      *
-     * @return the size of the menu
+     * @param menuManager the menu manager
+     * @return the view of the menu
      */
-    public int getSize() {
-        return size;
+    public MenuView open(MenuManager menuManager) {
+        Inventory inventory = inventorySupplier.create(title);
+        placeButtons(inventory);
+        player.openInventory(inventory);
+        return menuManager.registerActiveView(new MenuView(this, inventory, menuManager));
     }
 
     /**
-     * Gets the title of the menu.
+     * Gets the player viewing the menu.
      *
-     * @return the title of the menu
+     * @return the player
      */
-    public String getTitle() {
-        return title;
+    public Player getPlayer() {
+        return player;
     }
 }

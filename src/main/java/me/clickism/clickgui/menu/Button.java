@@ -1,56 +1,196 @@
 package me.clickism.clickgui.menu;
 
-import me.clickism.clickgui.menu.icon.Icon;
-import org.bukkit.entity.Player;
+import me.clickism.clickgui.annotations.Colorized;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
- * Represents a icon in a menu.
+ * Represents a button in a menu.
  */
-public abstract class Button {
-
-    private final int slot;
-    private final Icon icon;
+public class Button {
+    /**
+     * The icon of this button.
+     */
+    protected Icon icon;
+    /**
+     * Whether this button is immovable.
+     */
+    protected boolean immovable = true;
 
     /**
-     * Creates a new icon with the specified slot.
-     *
-     * @param slot the slot of the icon
+     * The action to perform when this button is clicked.
      */
-    public Button(int slot, Icon icon) {
-        this.slot = slot;
+    protected BiConsumer<InventoryClickEvent, MenuView> onClick = (event, view) -> {};
+
+    /**
+     * Creates a new button with the specified icon.
+     *
+     * @param icon the icon
+     */
+    protected Button(Icon icon) {
         this.icon = icon;
     }
 
     /**
-     * Gets the icon of the icon.
+     * Handles the click event for this button.
      *
-     * @return the icon of the icon
+     * @param event the click event
+     * @param view  the view
      */
-    public Icon getIcon() {
-        return icon;
+    protected void handleClick(InventoryClickEvent event, MenuView view) {
+        event.setCancelled(immovable);
+        onClick.accept(event, view);
     }
 
     /**
-     * Handles the click event when the icon is clicked.
+     * Sets the name of this button's icon. See {@link Icon#setName(String)}.
      *
-     * @param event the click event
+     * @param name the name
+     * @return this button
      */
-    protected abstract void onClick(InventoryClickEvent event);
+    public Button setName(@Colorized String name) {
+        icon.setName(name);
+        return this;
+    }
 
     /**
-     * Plays the click sound for the player.
+     * Sets the material of this button's icon. See {@link Icon#setMaterial(Material)}.
      *
-     * @param player the player
+     * @param material the material
+     * @return this button
      */
-    protected abstract void playClickSound(Player player);
+    public Button setMaterial(Material material) {
+        icon.setMaterial(material);
+        return this;
+    }
 
     /**
-     * Gets the slot of the icon.
+     * Hides the attributes of this button's icon. See {@link Icon#hideAttributes()}.
      *
-     * @return the slot of the icon
+     * @return this button
      */
-    public int getSlot() {
-        return slot;
+    public Button hideAttributes() {
+        icon.hideAttributes();
+        return this;
+    }
+
+    /**
+     * Adds an enchantment glint to this button's icon. See {@link Icon#addEnchantmentGlint()}.
+     *
+     * @return this button
+     */
+    public Button addEnchantmentGlint() {
+        icon.addEnchantmentGlint();
+        return this;
+    }
+
+    /**
+     * Sets the lore of this button's icon. See {@link Icon#setLore(List)}.
+     *
+     * @param lore the lore
+     * @return this button
+     */
+    public Button setLore(@Colorized String... lore) {
+        icon.setLore(lore);
+        return this;
+    }
+
+    /**
+     * Sets the lore of this button's icon. See {@link Icon#setLore(List)}.
+     *
+     * @param lore the lore
+     * @return this button
+     */
+    public Button setLore(@Colorized List<String> lore) {
+        icon.setLore(lore);
+        return this;
+    }
+
+    /**
+     * Sets the action to perform when this button is clicked.
+     *
+     * @param action the action
+     * @return this button
+     */
+    public Button setOnClick(ClickAction action) {
+        this.onClick = (event, view) -> action.onClick(view, event.getRawSlot());
+        return this;
+    }
+
+    /**
+     * Sets the action to perform when this button is clicked.
+     *
+     * @param eventConsumer the action
+     * @return this button
+     */
+    public Button setOnClick(Consumer<InventoryClickEvent> eventConsumer) {
+        this.onClick = (event, view) -> eventConsumer.accept(event);
+        return this;
+    }
+
+    /**
+     * Marks this button as movable, allowing it to be moved and removed from the inventory.
+     *
+     * @return this button
+     */
+    public Button setMovable() {
+        this.immovable = false;
+        return this;
+    }
+
+    /**
+     * Applies the consumer to the meta of this button's icon. See {@link Icon#applyToMeta(Consumer)}.
+     *
+     * @param consumer the consumer
+     * @return this button
+     */
+    public Button applyToMeta(Consumer<ItemMeta> consumer) {
+        icon.applyToMeta(consumer);
+        return this;
+    }
+
+    /**
+     * Creates a button with an empty icon.
+     *
+     * @return the button
+     */
+    public static Button empty() {
+        return withIcon(Material.AIR);
+    }
+
+    /**
+     * Creates a button with the specified icon.
+     *
+     * @param icon the icon
+     * @return the button
+     */
+    public static Button withIcon(Icon icon) {
+        return new Button(icon);
+    }
+
+    /**
+     * Creates a button with the specified item stack as the icon.
+     *
+     * @param item the item stack
+     * @return the button
+     */
+    public static Button withIcon(ItemStack item) {
+        return new Button(Icon.of(item));
+    }
+
+    /**
+     * Creates a button with the specified material as the icon.
+     *
+     * @param material the material
+     * @return the button
+     */
+    public static Button withIcon(Material material) {
+        return new Button(Icon.of(material));
     }
 }
