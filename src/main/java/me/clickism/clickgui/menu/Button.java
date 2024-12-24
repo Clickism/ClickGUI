@@ -119,7 +119,7 @@ public class Button {
      * @return this button
      */
     public Button setOnClick(ClickAction action) {
-        this.onClick = (event, view) -> action.onClick(view, event.getRawSlot());
+        this.onClick = (event, view) -> action.onClick(view.getMenu().getPlayer(), view, event.getRawSlot());
         return this;
     }
 

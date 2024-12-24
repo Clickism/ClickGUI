@@ -47,6 +47,10 @@ public class Menu {
      */
     protected ClickHandler clickHandler = new StaticClickHandler();
     /**
+     * The action to perform when the menu is open.
+     */
+    protected Consumer<MenuView> onOpen = view -> {};
+    /**
      * The action to perform when the menu is closed.
      */
     protected Consumer<MenuView> onClose = view -> {};
@@ -134,6 +138,17 @@ public class Menu {
     }
 
     /**
+     * Sets the action to perform when the menu is opened.
+     *
+     * @param onOpen the action to perform
+     * @return this menu
+     */
+    public Menu setOnOpen(Consumer<MenuView> onOpen) {
+        this.onOpen = onOpen;
+        return this;
+    }
+
+    /**
      * Sets the action to perform when the menu is closed.
      *
      * @param onClose the action to perform
@@ -178,7 +193,9 @@ public class Menu {
         Inventory inventory = inventorySupplier.create(title);
         placeButtons(inventory);
         player.openInventory(inventory);
-        return menuManager.registerActiveView(new MenuView(this, inventory, menuManager));
+        MenuView view = new MenuView(this, inventory, menuManager);
+        onOpen.accept(view);
+        return menuManager.registerActiveView(view);
     }
 
     /**

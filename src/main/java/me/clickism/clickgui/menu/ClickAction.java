@@ -1,5 +1,7 @@
 package me.clickism.clickgui.menu;
 
+import org.bukkit.entity.Player;
+
 /**
  * Represents a click action/callback of a button.
  */
@@ -8,8 +10,9 @@ public interface ClickAction {
     /**
      * Called when the button is clicked.
      *
+     * @param player the player who clicked the button
      * @param view the menu view
      * @param slot the slot of the button
      */
-    void onClick(MenuView view, int slot);
+    void onClick(Player player, MenuView view, int slot);
 }

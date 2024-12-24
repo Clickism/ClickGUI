@@ -24,7 +24,7 @@ public class MenuManager implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<Inventory, MenuView> activeMenus = new HashMap<>();
-    
+
     /**
      * Creates a new menu manager and registers it as a listener.
      *

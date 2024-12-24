@@ -1,5 +1,6 @@
 package me.clickism.clickgui.menu;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
@@ -92,6 +93,15 @@ public class MenuView {
      */
     protected void onClose() {
         menu.onClose.accept(this);
+    }
+
+    /**
+     * Gets the player viewing the menu.
+     *
+     * @return the player
+     */
+    public Player getPlayer() {
+        return menu.getPlayer();
     }
 
     /**
