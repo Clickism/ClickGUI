@@ -83,7 +83,11 @@ public class MenuManager implements Listener {
      */
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        runOnActiveView(event.getInventory(), view -> view.onClick(event));
+        runOnActiveView(event.getInventory(), view -> {
+            int slot = event.getRawSlot();
+            if (slot < 0 || slot >= view.getInventory().getSize()) return;
+            view.onClick(event);
+        });
     }
 
     /**

@@ -124,6 +124,15 @@ public interface Icon {
     }
 
     /**
+     * Creates an empty icon.
+     *
+     * @return the icon
+     */
+    static Icon empty() {
+        return of(Material.AIR);
+    }
+
+    /**
      * Creates an icon from the given item stack.
      *
      * @param item the item stack

@@ -71,7 +71,10 @@ public class MenuView {
      * @param event the event to handle
      */
     protected void onClick(InventoryClickEvent event) {
-        if (!menu.clickHandler.isValidClick(event)) return;
+        if (!menu.clickHandler.isValidClick(event)) {
+            event.setCancelled(true);
+            return;
+        }
         if (menu.clickHandler.handleClick(event)) return;
         Button button = menu.buttons[event.getRawSlot()];
         if (button != null) {
