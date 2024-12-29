@@ -78,7 +78,7 @@ public interface Icon {
     default Icon hideAllAttributes() {
         return applyToMeta(meta -> {
             addDummyAttributeModifier(meta);
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ARMOR_TRIM, 
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ARMOR_TRIM,
                     ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_DYE, ItemFlag.HIDE_UNBREAKABLE);
         });
     }
@@ -135,6 +135,20 @@ public interface Icon {
         if (meta == null) return this;
         consumer.accept(meta);
         get().setItemMeta(meta);
+        return this;
+    }
+
+    /**
+     * Runs the consumer if the condition is true.
+     *
+     * @param condition the condition
+     * @param consumer  the consumer
+     * @return this icon
+     */
+    default Icon runIf(boolean condition, Consumer<Icon> consumer) {
+        if (condition) {
+            consumer.accept(this);
+        }
         return this;
     }
 
