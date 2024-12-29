@@ -133,6 +133,20 @@ public class Button {
     }
 
     /**
+     * Runs the consumer on this button if the condition is true.
+     *
+     * @param condition the condition
+     * @param consumer  the consumer
+     * @return this button
+     */
+    public Button runIf(boolean condition, Consumer<Button> consumer) {
+        if (condition) {
+            consumer.accept(this);
+        }
+        return this;
+    }
+
+    /**
      * Sets the action to perform when this button is clicked.
      *
      * @param action the action
