@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Represents the icon of a button.
@@ -181,5 +182,15 @@ public interface Icon {
     static Icon of(Material material) {
         final ItemStack item = new ItemStack(material);
         return () -> item;
+    }
+
+    /**
+     * Creates a dynamic icon from the given icon supplier.
+     *
+     * @param iconSupplier the icon supplier
+     * @return the icon
+     */
+    static Icon of(Supplier<Icon> iconSupplier) {
+        return () -> iconSupplier.get().get();
     }
 }

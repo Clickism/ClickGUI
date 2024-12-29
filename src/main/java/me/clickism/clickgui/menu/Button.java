@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Represents a button in a menu.
@@ -46,6 +47,15 @@ public class Button {
     protected void handleClick(InventoryClickEvent event, MenuView view) {
         event.setCancelled(immovable);
         onClick.accept(event, view);
+    }
+
+    /**
+     * Gets the icon of this button.
+     *
+     * @return the icon
+     */
+    public Icon getIcon() {
+        return icon;
     }
 
     /**
@@ -226,5 +236,15 @@ public class Button {
      */
     public static Button withIcon(Material material) {
         return new Button(Icon.of(material));
+    }
+
+    /**
+     * Creates a button with the specified icon supplier.
+     *
+     * @param iconSupplier the icon supplier
+     * @return the button
+     */
+    public static Button withIcon(Supplier<Icon> iconSupplier) {
+        return new Button(Icon.of(iconSupplier));
     }
 }
