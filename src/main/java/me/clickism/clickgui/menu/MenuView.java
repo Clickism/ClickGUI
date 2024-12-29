@@ -43,6 +43,13 @@ public class MenuView {
     }
 
     /**
+     * Opens the menu of the menu view again.
+     */
+    public void reopen() {
+        menu.open(menuManager);
+    }
+
+    /**
      * Refreshes the button at the given slot.
      *
      * @param slot the slot to refresh

@@ -3,6 +3,8 @@ package me.clickism.clickgui.menu;
 import me.clickism.clickgui.annotations.Colorized;
 import me.clickism.clickgui.util.Utils;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -50,7 +52,10 @@ public interface Icon {
      * @return this icon
      */
     default Icon hideAttributes() {
-        return applyToMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES));
+        return applyToMeta(meta -> {
+            addDummyAttributeModifier(meta);
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        });
     }
 
     /**
@@ -59,7 +64,10 @@ public interface Icon {
      * @return this icon
      */
     default Icon hidePotionEffects() {
-        return applyToMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS));
+        return applyToMeta(meta -> {
+            addDummyAttributeModifier(meta);
+            meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        });
     }
 
     /**
@@ -68,9 +76,16 @@ public interface Icon {
      * @return this icon
      */
     default Icon hideAllAttributes() {
-        return applyToMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_POTION_EFFECTS,
-                ItemFlag.HIDE_ARMOR_TRIM, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_DYE,
-                ItemFlag.HIDE_UNBREAKABLE));
+        return applyToMeta(meta -> {
+            addDummyAttributeModifier(meta);
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ARMOR_TRIM, 
+                    ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_DYE, ItemFlag.HIDE_UNBREAKABLE);
+        });
+    }
+
+    private void addDummyAttributeModifier(ItemMeta meta) {
+        meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH,
+                new AttributeModifier("clickgui.hide_attributes", 0, AttributeModifier.Operation.ADD_NUMBER));
     }
 
     /**
