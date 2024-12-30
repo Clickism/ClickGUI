@@ -143,6 +143,16 @@ public class Button {
     }
 
     /**
+     * Adds a line to the lore of this button's icon. See {@link Icon#addLoreLine(String)}.
+     * @param line the line
+     * @return this button
+     */
+    public Button addLoreLine(@Colorized String line) {
+        icon.addLoreLine(line);
+        return this;
+    }
+
+    /**
      * Runs the consumer on this button if the condition is true.
      *
      * @param condition the condition

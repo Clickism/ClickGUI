@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -122,6 +123,23 @@ public interface Icon {
             meta.setLore(lore.stream()
                     .map(Utils::colorize)
                     .toList());
+        });
+    }
+    
+    /**
+     * Adds a line to the lore of this icon.
+     *
+     * @param line the line
+     * @return this icon
+     */
+    default Icon addLoreLine(@Colorized String line) {
+        return applyToMeta(meta -> {
+            List<String> lore = meta.getLore();
+            if (lore == null) {
+                lore = new ArrayList<>();
+            }
+            lore.add(Utils.colorize(line));
+            meta.setLore(lore);
         });
     }
 
