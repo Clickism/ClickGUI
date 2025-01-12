@@ -1,6 +1,4 @@
-package me.clickism.clickgui.annotations;
-
-import me.clickism.clickgui.util.Utils;
+package me.clickism.clickgui.menu;
 
 import java.lang.annotation.Documented;
 

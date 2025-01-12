@@ -1,7 +1,5 @@
 package me.clickism.clickgui.menu;
 
-import me.clickism.clickgui.annotations.Colorized;
-import me.clickism.clickgui.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;

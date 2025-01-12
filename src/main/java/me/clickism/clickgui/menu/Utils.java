@@ -1,11 +1,11 @@
-package me.clickism.clickgui.util;
+package me.clickism.clickgui.menu;
 
 import org.bukkit.ChatColor;
 
 /**
  * Utility class.
  */
-public class Utils {
+class Utils {
     /**
      * No constructor for utility class.
      */

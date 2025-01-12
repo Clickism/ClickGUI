@@ -1,9 +1,7 @@
 package me.clickism.clickgui.menu;
 
-import me.clickism.clickgui.annotations.Colorized;
 import me.clickism.clickgui.menu.handler.ClickHandler;
 import me.clickism.clickgui.menu.handler.StaticClickHandler;
-import me.clickism.clickgui.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;

@@ -1,6 +1,5 @@
 package me.clickism.clickgui.menu;
 
-import me.clickism.clickgui.annotations.Colorized;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
