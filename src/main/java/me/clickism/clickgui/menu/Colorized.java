@@ -7,5 +7,5 @@ import java.lang.annotation.Documented;
  * See {@link Utils#colorize(String)}.
  */
 @Documented
-public @interface Colorized {
+@interface Colorized {
 }
