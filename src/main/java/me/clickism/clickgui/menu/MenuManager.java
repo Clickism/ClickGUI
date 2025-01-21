@@ -11,6 +11,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -18,6 +19,11 @@ import java.util.function.Consumer;
  * Listens for menu clicks and passes them to their active menus.
  */
 public class MenuManager implements Listener {
+
+    /**
+     * The instance of the menu manager.
+     */
+    protected static MenuManager instance;
 
     private final JavaPlugin plugin;
     private final Map<Inventory, MenuView> activeMenus = new HashMap<>();
@@ -118,5 +124,27 @@ public class MenuManager implements Listener {
         MenuView view = activeMenus.get(inventory);
         if (view == null) return;
         consumer.accept(view);
+    }
+
+    /**
+     * Gets the instance of the menu manager, or
+     * null if no instance was set.
+     *
+     * @return the instance
+     */
+    @Nullable
+    public static MenuManager getInstance() {
+        return instance;
+    }
+
+    /**
+     * Sets the instance of the menu manager to be used
+     * by the shorthand method {@link Menu#open()}.
+     */
+    public static void setInstance(MenuManager instance) {
+        if (MenuManager.instance != null) {
+            throw new IllegalStateException("Instance already set");
+        }
+        MenuManager.instance = instance;
     }
 }
