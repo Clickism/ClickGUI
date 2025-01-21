@@ -140,6 +140,8 @@ public class MenuManager implements Listener {
     /**
      * Sets the instance of the menu manager to be used
      * by the shorthand method {@link Menu#open()}.
+     *
+     * @param instance the instance
      */
     public static void setInstance(MenuManager instance) {
         if (MenuManager.instance != null) {
