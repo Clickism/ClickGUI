@@ -197,6 +197,21 @@ public class Menu {
     }
 
     /**
+     * Opens the menu using the instance of the menu manager
+     * set by {@link MenuManager#setInstance(MenuManager)}.
+     *
+     * @throws IllegalStateException if no instance was set
+     * @return the view of the menu
+     */
+    public MenuView open() {
+        MenuManager menuManager = MenuManager.getInstance();
+        if (menuManager == null) {
+            throw new IllegalStateException("MenuManager instance not set");
+        }
+        return open(menuManager);
+    }
+
+    /**
      * Gets the player viewing the menu.
      *
      * @return the player
