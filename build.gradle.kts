@@ -1,6 +1,8 @@
 plugins {
     id("java")
     id("maven-publish")
+    id("signing")
+    id("com.gradleup.nmcp").version("0.1.4")
 }
 
 group = "de.clickism"
@@ -66,12 +68,49 @@ publishing {
             from(components["java"])
             artifact(tasks["sourcesJar"])
             artifact(tasks["javadocJar"])
+            groupId = group.toString()
+            artifactId = "click-gui"
+            version = version.toString()
+            pom {
+                name.set("ClickGUI")
+                description.set("A simple GUI library for Spigot.")
+                url.set("https://github.com/Clickism/ClickGUI")
+                licenses {
+                    license {
+                        name.set("GNU General Public License v3.0")
+                        url.set("https://www.gnu.org/licenses/gpl-3.0.html")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("Clickism")
+                        name.set("Clickism")
+                        email.set("dev@clickism.de")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/Clickism/ClickGUI.git")
+                    developerConnection.set("scm:git:ssh://github.com/Clickism/ClickGUI.git")
+                    url.set("https://github.com/Clickism/ClickGUI")
+                }
+            }
+        }
+        repositories {
+            maven {
+                name = "mavenLocal" // Or your remote repository
+            }
         }
     }
-    repositories {
-        maven {
-            name = "mavenLocal" // Or your remote repository
-        }
+    signing {
+        sign(publishing.publications["mavenJava"])
+    }
+}
+
+nmcp {
+    centralPortal {
+        username = findProperty("ossrhUsername") as String?
+        password = findProperty("ossrhPassword") as String?
+        publishingType = "USER_MANAGED"
     }
 }
 
