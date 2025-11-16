@@ -95,11 +95,6 @@ publishing {
                 }
             }
         }
-        repositories {
-            maven {
-                name = "mavenLocal" // Or your remote repository
-            }
-        }
     }
     signing {
         sign(publishing.publications["mavenJava"])
