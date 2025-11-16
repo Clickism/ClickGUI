@@ -1,4 +1,4 @@
-package me.clickism.clickgui.menu.handler;
+package de.clickism.clickgui.menu.handler;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;

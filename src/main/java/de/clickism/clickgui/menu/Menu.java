@@ -1,7 +1,7 @@
-package me.clickism.clickgui.menu;
+package de.clickism.clickgui.menu;
 
-import me.clickism.clickgui.menu.handler.ClickHandler;
-import me.clickism.clickgui.menu.handler.StaticClickHandler;
+import de.clickism.clickgui.menu.handler.ClickHandler;
+import de.clickism.clickgui.menu.handler.StaticClickHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;

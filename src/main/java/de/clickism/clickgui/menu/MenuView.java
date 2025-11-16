@@ -1,4 +1,4 @@
-package me.clickism.clickgui.menu;
+package de.clickism.clickgui.menu;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

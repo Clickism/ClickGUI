@@ -1,4 +1,4 @@
-package me.clickism.clickgui.menu;
+package de.clickism.clickgui.menu;
 
 import org.bukkit.ChatColor;
 

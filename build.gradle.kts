@@ -3,7 +3,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "me.clickism"
+group = "de.clickism"
 version = property("plugin_version").toString()
 
 repositories {

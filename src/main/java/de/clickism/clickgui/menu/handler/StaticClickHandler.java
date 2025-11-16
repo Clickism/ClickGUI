@@ -1,4 +1,4 @@
-package me.clickism.clickgui.menu.handler;
+package de.clickism.clickgui.menu.handler;
 
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
